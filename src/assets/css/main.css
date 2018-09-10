@@ -35,12 +35,13 @@ a {
     transition: -webkit-box-shadow 0.3s;
     transition: box-shadow 0.3s;
     transition: box-shadow 0.3s, -webkit-box-shadow 0.3s;
+    cursor: pointer;
 }
 
-a:hover {
+/* a:hover {
     -webkit-box-shadow: inset 0 -2px 0 0 #5A6380;
     box-shadow: inset 0 -2px 0 0 #5A6380;
-}
+} */
 
 textarea {
     line-height: 1.25;
@@ -97,24 +98,63 @@ body {
     }
 }
 
-.inner-border {
-    background: snow;
-    color:#5A6380;
-    margin: 50px;
-    padding: 15px;
-    position: relative;
+div.content {
+    background-color: snow;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18), 0 6px 6px rgba(0, 0, 0, 0.18), 0px 2px 3px 2px rgba(0, 0, 0, 0.03);
     border-radius: 10px;
-    z-index: 99;
+    width: 80%;
+    margin: 40px auto 10px auto;
+    padding: 30px;
+    padding-top: 10px;
+    overflow: hidden;
+    position: relative;
 }
 
-.inner-border:before {
-    border: 5px solid snow;
-    bottom: -10px;
-    content: "";
-    left: -10px;
-    position: absolute;
-    right: -10px;
-    top: -10px;
-    border-radius: 20px;
-    z-index:-1;
+.dashborad > a{
+    padding: 0 20px !important;
+    font-size:14px;
+}
+
+.text-align-left{
+    text-align: left;
+}
+
+.text-align-right{
+    text-align: right;
+}
+
+.text-align-centre{
+    text-align: center;
+}
+
+.inline-block{
+    display: inline-block;
+}
+
+.font-20{
+    font-size: 20px;
+}
+
+.margin-top-40{
+    margin-top : 40px;
+}
+
+.padding-bottom-10{
+    padding-bottom : 10px;
+}
+
+.padding-bottom-5{
+    padding-bottom : 5px;
+}
+
+pre{
+    width: 24%;
+    padding: 13px;
+    border-radius: 10px;
+    line-height: 15px;
+    color: snow;
+	overflow-y: hidden;
+	font-size: 12px !important;
+	background: #efefef;
+	background-color: #777;
 }

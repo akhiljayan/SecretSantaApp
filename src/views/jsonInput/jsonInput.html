@@ -1,0 +1,28 @@
+<div class="content">
+    <div class="row">
+        <div class="col-1 inline-block text-align-left">
+            <a href="#" style="vertical-align: sub" ng-click="vm.goBack()"><i class="fas font-20 fa-arrow-alt-circle-left"></i></a>
+        </div>
+        <div class="col-10 inline-block text-align-centre">
+            <h2>Json Input</h2>
+        </div>
+        <div class="col-1 inline-block"></div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span>Please give input in following format:</span>
+        </div>
+        <div class="col-12">
+            <pre>{{vm.format | json}}</pre>
+        </div>
+    </div>
+    <div class="row" style="text-align: center">
+        <div style="width:100%">
+            <textarea ng-model="vm.obj" id="myTextArea" cols=50 rows=10 placeholder="Json Input"></textarea>
+            <div style="margin-top:10px">
+                <button class="btn btn-primary" ng-click="vm.prettyPrint()">Format Json</button>
+                <a class="btn btn-success" ng-click="vm.checkObjectAndSave()">Find Secret Santas</a>
+            </div>
+        </div>
+    </div>
+</div>

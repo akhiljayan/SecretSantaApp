@@ -1,0 +1,44 @@
+<div class="content">
+    <div class="row">
+        <div class="col-1 inline-block text-align-left">
+            <a href="#" style="vertical-align: sub" ng-click="vm.goBack()"><i class="fas font-20 fa-arrow-alt-circle-left"></i></a>
+        </div>
+        <div class="col-10 inline-block text-align-centre">
+            <h2>Form Input</h2>
+        </div>
+        <div class="col-1 inline-block"></div>
+    </div>
+    <div class="row" style="text-align: center">
+        <form name="vm.empform" ng-submit="submitTable()" style="width:100%">
+            <div class="row text-align-centre padding-bottom-10" ng-if="vm.employees.length > 0">
+                <div class="col-1">#</div>
+                <div class="col-4">Employee Name</div>
+                <div class="col-3">Gender</div>
+                <div class="col-4">Manager</div>
+            </div>
+
+            <div class="row text-align-centre padding-bottom-5" ng-repeat="emp in vm.employees">
+                {{emp.id = $index + 1}}
+                <div class="col-1">{{$index + 1}}</div>
+                <div class="col-4">
+                    <input type="text" ng-required="true" ng-model="emp.name" class="form-control" placeholder="Name">
+                </div>
+                <div class="col-3">
+                    <select class="custom-select form-control" ng-required="true" ng-model="emp.gender" aria-placeholder="Gender">
+                        <option value="">Gender</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <input type="text" ng-model="emp.manager" ng-required="true" class="form-control" placeholder="Manager">
+                </div>
+            </div>
+
+            <div style="margin-top:10px">
+                <button class="btn btn-primary" ng-click="vm.addFormField()">Add Employee</button>
+                <button class="btn btn-success" type='submit'>Find Secret Santas</button>
+            </div>
+        </form>
+    </div>
+</div>

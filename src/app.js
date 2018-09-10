@@ -1,44 +1,55 @@
 // app.routes.js
 (function () {
 
-    var app = angular.module('app', ['ui.router']);
+    var appModule = angular.module("app", [
+        "ui.router"
+    ]);
 
-    app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-        const states = [{
-            name: 'home',
-            url: '',
-            template: '<home></home>',
-            data: {
-                pageTitle: 'Home'
-            }
-        }, {
-            name: 'albums',
-            url: '/albums',
-            template: '<albums></albums>',
-            data: {
-                pageTitle: 'Albums'
-            }
-        }, {
-            name: 'posts',
-            url: '/posts',
-            template: '<posts></posts>',
-            data: {
-                pageTitle: 'Posts'
-            }
-        }];
-        states.forEach(state => {
-            $stateProvider.state(state);
-        });
-        $urlRouterProvider.when('/', ['$state', '$match', ($state, $match) => {
-            $state.go('home');
-        }]);
-    }])
+    appModule.config([
+        '$stateProvider', '$urlRouterProvider', 
+        function ($stateProvider, $urlRouterProvider) {
+    
+            // Default route (overrided below if user has permission)
+            $urlRouterProvider.otherwise("/welcome");
+    
+            //Welcome page
+            $stateProvider.state('welcome', {
+                url: '/welcome',
+                template: '<home></home>',
+            });
 
-    app.run(['$rootScope', '$state', '$stateParams',
-        function ($rootScope, $state, $stateParams) {
-            $rootScope.$state = $state;
-            $rootScope.$stateParams = $stateParams;
+            $stateProvider.state('forminput', {
+                url: '/form',
+                template: '<form-input></form-input>',
+            });
+
+            $stateProvider.state('excelinput', {
+                url: '/excel',
+                template: '<excel-input></excel-input>',
+            });
+
+            $stateProvider.state('jsoninput', {
+                url: '/json',
+                template: '<json-input></json-input>',
+            });
         }
     ]);
+
+    appModule.run(["$rootScope", "$state",function ($rootScope, $state) {
+        $rootScope.$state = $state;
+    
+    
+        $rootScope.safeApply = function (fn) {
+            var phase = this.$root.$$phase;
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        };
+    }]);
+
 
 })();
