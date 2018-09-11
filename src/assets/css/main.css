@@ -194,3 +194,17 @@ pre {
     vertical-align: super;
     float:left;
 }
+
+.maleIndication{
+    padding: 0px 10px;
+    border:1px solid #9dadff;
+    background-color: #9dadff;
+    border-radius: 10px;
+}
+
+.femaleIndication{
+    padding: 0px 10px;
+    border:1px solid #ffb9b9;
+    background-color: #ffb9b9;
+    border-radius: 10px;
+}

@@ -1,7 +1,7 @@
 .window {
     width: 300px;
     height: 300px;
-    margin-top: -41px;
+    margin-top: -41px !important;
     background: #a0d5d3;
     position: absolute;
     top: 50%;

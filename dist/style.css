@@ -201,6 +201,20 @@ pre {
     vertical-align: super;
     float:left;
 }
+
+.maleIndication{
+    padding: 0px 10px;
+    border:1px solid #9dadff;
+    background-color: #9dadff;
+    border-radius: 10px;
+}
+
+.femaleIndication{
+    padding: 0px 10px;
+    border:1px solid #ffb9b9;
+    background-color: #ffb9b9;
+    border-radius: 10px;
+}
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 /**
@@ -629,7 +643,7 @@ pre {
 .window {
     width: 300px;
     height: 300px;
-    margin-top: -41px;
+    margin-top: -41px !important;
     background: #a0d5d3;
     position: absolute;
     top: 50%;
