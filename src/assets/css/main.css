@@ -110,51 +110,87 @@ div.content {
     position: relative;
 }
 
-.dashborad > a{
+.dashborad>a {
     padding: 0 20px !important;
-    font-size:14px;
+    font-size: 14px;
 }
 
-.text-align-left{
+.text-align-left {
     text-align: left;
 }
 
-.text-align-right{
+.text-align-right {
     text-align: right;
 }
 
-.text-align-centre{
+.text-align-centre {
     text-align: center;
 }
 
-.inline-block{
+.inline-block {
     display: inline-block;
 }
 
-.font-20{
+.font-20 {
     font-size: 20px;
 }
 
-.margin-top-40{
-    margin-top : 40px;
+.margin-top-40 {
+    margin-top: 40px;
 }
 
-.padding-bottom-10{
-    padding-bottom : 10px;
+.margin-top-10 {
+    margin-top: 40px;
 }
 
-.padding-bottom-5{
-    padding-bottom : 5px;
+.margin-bottom-10{
+    margin-bottom: 40px;
 }
 
-pre{
+.padding-bottom-10 {
+    padding-bottom: 10px;
+}
+
+.padding-bottom-5 {
+    padding-bottom: 5px;
+}
+
+pre {
     width: 24%;
     padding: 13px;
     border-radius: 10px;
     line-height: 15px;
     color: snow;
-	overflow-y: hidden;
-	font-size: 12px !important;
-	background: #efefef;
-	background-color: #777;
+    overflow-y: hidden;
+    font-size: 12px !important;
+    background: #efefef;
+    background-color: #777;
+}
+
+.col-grid {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin:10px;
+    border: 1px solid #FF7373;
+}
+
+.col-grid-low{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin:5px 10px 5px 10px;
+    border: 1px solid #FF7373;
+}
+
+.background-female{
+    background-color: #ffb9b9;
+}
+
+.background-male{
+    background-color: #9dadff
+}
+
+.link-btn{
+    padding: 2px 5px;
+    vertical-align: super;
+    float:left;
 }

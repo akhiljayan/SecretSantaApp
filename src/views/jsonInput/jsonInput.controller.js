@@ -1,6 +1,6 @@
 (function () {
     angular.module('app').controller('JsonInputController', [
-        '$state', '$scope','ssaOperations',
+        '$state', '$scope', 'ssaOperations',
         function ($state, $scope, ssaopp) {
             var vm = this;
             vm.header = 'Home sweet home!';
@@ -16,7 +16,7 @@
                     var obj = JSON.parse(ugly);
                     var pretty = JSON.stringify(obj, undefined, 4);
                     vm.obj = pretty;
-                    if(saveFlag){
+                    if (saveFlag) {
                         vm.checkObjectAndSave();
                     }
                 } catch (e) {
@@ -24,14 +24,25 @@
                 }
             }
 
-            vm.checkObjectAndSave = function(){
+            vm.checkObjectAndSave = function () {
                 var jsonObj = JSON.parse(vm.obj);
-                var set = ssaopp.getPairs(jsonObj);
-                console.log(set);
+                var set = ssaopp.validateInputAndGetPair(jsonObj);
+                if (set.status) {
+                    $state.go('showsecretsanta', {
+                        data: set.data
+                    });
+                } else {
+                    swal(set.data);
+                }
             }
 
             function onInit() {
-                vm.format = [{'id':'','name':'', 'gender':'M/F', 'manager': ''}];
+                vm.format = [{
+                    'id': '',
+                    'name': '',
+                    'gender': 'M/F',
+                    'manager': ''
+                }];
                 vm.employees = [];
             }
         }

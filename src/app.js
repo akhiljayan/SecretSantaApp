@@ -23,14 +23,15 @@
                 template: '<form-input></form-input>',
             });
 
-            $stateProvider.state('excelinput', {
-                url: '/excel',
-                template: '<excel-input></excel-input>',
-            });
-
             $stateProvider.state('jsoninput', {
                 url: '/json',
                 template: '<json-input></json-input>',
+            });
+
+            $stateProvider.state('showsecretsanta', {
+                url: '/showsecretsanta',
+                template: '<show-secret-santa></show-secret-santa>',
+                params : {data: []}
             });
         }
     ]);

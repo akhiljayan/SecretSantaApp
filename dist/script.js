@@ -46954,14 +46954,15 @@ $provide.value("$locale", {
                 template: '<form-input></form-input>',
             });
 
-            $stateProvider.state('excelinput', {
-                url: '/excel',
-                template: '<excel-input></excel-input>',
-            });
-
             $stateProvider.state('jsoninput', {
                 url: '/json',
                 template: '<json-input></json-input>',
+            });
+
+            $stateProvider.state('showsecretsanta', {
+                url: '/showsecretsanta',
+                template: '<show-secret-santa></show-secret-santa>',
+                params : {data: []}
             });
         }
     ]);
@@ -46986,23 +46987,35 @@ $provide.value("$locale", {
 })();
 (function () {
     angular.module('app').factory('ssaOperations', ['$state', '$filter', function ($state, $filter) {
-
-
         var ssaOperationFactory = {};
 
-        ssaOperationFactory.valudateInputObject = function (input) {
-            angular.forEach(input, function (index, obj) {
+        ssaOperationFactory.validateInputAndGetPair = function (input) {
+            var inputArray = [];
+            //angular.forEach(input, function (obj, index) {
+            for (var i = 0; i < input.length; i++) {
+                var obj = input[i];
                 if (!obj.hasOwnProperty("name") || !obj.hasOwnProperty("gender") || !obj.hasOwnProperty("manager") || !obj.hasOwnProperty("id")) {
-                    return false;
+                    return {"status":false, "data" : "Properties givin to the employees are not valid"};
                 } else {
                     var gender = obj.gender.toLowerCase();
                     if (gender.toLowerCase() != "m" && gender.toLowerCase() != "f" && gender.toLowerCase() != "female" && gender.toLowerCase() != "male") {
-                        return false;
+                        return {"status":false, "data" : "Please provide a proper value for gender"};
+                    }else{
+                        var parsedObj = {
+                            "id":obj.id, 
+                            "name": obj.name.trim(), 
+                            "gender": getGender(obj.gender.trim().toLowerCase()),
+                            "manager": obj.manager.trim()
+                        }
+                        inputArray.push(parsedObj);
                     }
                 }
-            });
-            return true;
-        }
+            }    
+            //});
+
+            var output = {"status":true, "data" : ssaOperationFactory.getPairs(inputArray)};
+            return output;
+        };
 
         ssaOperationFactory.getPairs = function (input) {
             var pairs = [];
@@ -47010,36 +47023,58 @@ $provide.value("$locale", {
             var array = input;
             angular.forEach(array, function (obj, index) {
                 if (!angular.equals(obj, {})) {
-                    var pairFound = $filter('filter')(array, function (m) {
+                    var pairsFound = $filter('filter')(array, function (m) {
                         return obj.id != m.id && obj.gender == m.gender && obj.manager != m.manager;
-                    })[0];
-                    if(pairFound){
+                    });
+                    var pairFound = shuffle(pairsFound);
+                    var santa = pairFound[0];
+                    if (santa) {
                         var tempArr = [];
                         tempArr.push(obj);
-                        tempArr.push(pairFound);
+                        tempArr.push(santa);
                         pairs.push(tempArr);
-                        var pairIndex = array.indexOf(pairFound);
+                        var pairIndex = array.indexOf(santa);
                         var objIndex = array.indexOf(obj);
                         array[pairIndex] = {};
                         array[objIndex] = {};
-                    }else{
+                    } else {
                         nonPairs.push(obj);
                     }
                 }
             });
 
-            debugger;
+            var nonPairArray = $filter('filter')(array, function (m) {
+                return !angular.equals(m, {})
+            })
 
             return {
                 "pairs": pairs,
-                "nonpairs": array
+                "nonpairs": nonPairArray
             };
         };
 
+        function shuffle(array) {
+            var currentIndex = array.length;
+            var temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        };
 
+        function getGender(gender){
+            if(gender == 'm' || gender == 'f'){
+                return gender;
+            }else{
+                return gender == 'male' ? 'm' : 'f';
+            }
+        };
 
         return ssaOperationFactory;
-
     }]);
 
 })();
@@ -47052,18 +47087,17 @@ $provide.value("$locale", {
 })();
 (function () {
     angular.module('app').controller('FormInputController', [
-        '$state', '$scope',
-        function ($state, $scope) {
+        '$state', '$scope','ssaOperations',
+        function ($state, $scope,ssaopp) {
             var vm = this;
             vm.header = 'Home sweet home!';
             vm.$onInit = onInit;
 
             vm.goBack = function () {
                 $state.go('welcome');
-            }
+            };
 
             vm.addFormField = function () {
-                debugger;
                 var lastElementIndex = vm.employees.length;
                 if (lastElementIndex == 0) {
                     addElement();
@@ -47074,7 +47108,21 @@ $provide.value("$locale", {
                     }
                     $scope.$apply();
                 }
-                
+            };
+
+            vm.submitTable = function(){
+                var set = ssaopp.validateInputAndGetPair(vm.employees);
+                if (set.status) {
+                    $state.go('showsecretsanta', {
+                        data: set.data
+                    });
+                } else {
+                    swal(set.data);
+                }
+            };
+
+            vm.removeInput = function (index) {
+                vm.employees.splice(index, 1);
             }
 
             function addElement() {
@@ -47084,57 +47132,11 @@ $provide.value("$locale", {
                     manager: ""
                 };
                 vm.employees.push(emp);
-            }
+            };
 
             function onInit() {
                 vm.employees = [];
-            }
-        }
-    ]);
-})();
-(function () {
-    angular.module('app').component('jsonInput', {
-        controller: 'JsonInputController',
-        controllerAs: 'vm',
-        templateUrl: 'views/jsonInput/jsonInput.html'
-    });
-})();
-(function () {
-    angular.module('app').controller('JsonInputController', [
-        '$state', '$scope','ssaOperations',
-        function ($state, $scope, ssaopp) {
-            var vm = this;
-            vm.header = 'Home sweet home!';
-            vm.$onInit = onInit;
-
-            vm.goBack = function () {
-                $state.go('welcome');
-            }
-
-            vm.prettyPrint = function (saveFlag) {
-                try {
-                    var ugly = vm.obj;
-                    var obj = JSON.parse(ugly);
-                    var pretty = JSON.stringify(obj, undefined, 4);
-                    vm.obj = pretty;
-                    if(saveFlag){
-                        vm.checkObjectAndSave();
-                    }
-                } catch (e) {
-                    swal("Please provide a valid Json format !!!");
-                }
-            }
-
-            vm.checkObjectAndSave = function(){
-                var jsonObj = JSON.parse(vm.obj);
-                var set = ssaopp.getPairs(jsonObj);
-                console.log(set);
-            }
-
-            function onInit() {
-                vm.format = [{'id':'','name':'', 'gender':'M/F', 'manager': ''}];
-                vm.employees = [];
-            }
+            };
         }
     ]);
 })();
@@ -47169,6 +47171,102 @@ $provide.value("$locale", {
                 // Initialization logic that relies on bindings being present
                 // should be put in this method, which is guarranteed to
                 // always be called after the bindings have been assigned.
+            }
+        }
+    ]);
+})();
+(function () {
+    angular.module('app').component('jsonInput', {
+        controller: 'JsonInputController',
+        controllerAs: 'vm',
+        templateUrl: 'views/jsonInput/jsonInput.html'
+    });
+})();
+(function () {
+    angular.module('app').controller('JsonInputController', [
+        '$state', '$scope', 'ssaOperations',
+        function ($state, $scope, ssaopp) {
+            var vm = this;
+            vm.header = 'Home sweet home!';
+            vm.$onInit = onInit;
+
+            vm.goBack = function () {
+                $state.go('welcome');
+            }
+
+            vm.prettyPrint = function (saveFlag) {
+                try {
+                    var ugly = vm.obj;
+                    var obj = JSON.parse(ugly);
+                    var pretty = JSON.stringify(obj, undefined, 4);
+                    vm.obj = pretty;
+                    if (saveFlag) {
+                        vm.checkObjectAndSave();
+                    }
+                } catch (e) {
+                    swal("Please provide a valid Json format !!!");
+                }
+            }
+
+            vm.checkObjectAndSave = function () {
+                var jsonObj = JSON.parse(vm.obj);
+                var set = ssaopp.validateInputAndGetPair(jsonObj);
+                if (set.status) {
+                    $state.go('showsecretsanta', {
+                        data: set.data
+                    });
+                } else {
+                    swal(set.data);
+                }
+            }
+
+            function onInit() {
+                vm.format = [{
+                    'id': '',
+                    'name': '',
+                    'gender': 'M/F',
+                    'manager': ''
+                }];
+                vm.employees = [];
+            }
+        }
+    ]);
+})();
+(function () {
+    angular.module('app').component('showSecretSanta', {
+        controller: 'ShowSecretSantaController',
+        controllerAs: 'vm',
+        templateUrl: 'views/showSecretSanta/showSecretSanta.html'
+    });
+})();
+(function () {
+    angular.module('app').controller('ShowSecretSantaController', [
+        '$state', '$stateParams', '$scope',
+        function ($state, $stateParams, $scope) {
+            var vm = this;
+            vm.header = 'Home sweet home!';
+            vm.$onInit = onInit;
+
+            vm.goBack = function () {
+                $state.go('welcome');
+            }
+
+
+
+            vm.printDiv = function () {
+                var printContents = document.getElementById("secret-santa").innerHTML;
+                var popupWin = window.open('', '_blank', 'width=300,height=300');
+                popupWin.document.open();
+                popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+                popupWin.document.close();
+                $state.go('welcome');
+            }
+
+
+            function onInit() {
+                vm.secretsantas = $stateParams.data;
+                vm.secretsantasPairs = vm.secretsantas.pairs;
+                vm.secretsantasNonPairs = vm.secretsantas.nonpairs;
             }
         }
     ]);
